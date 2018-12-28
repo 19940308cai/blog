@@ -1,0 +1,149 @@
+    .logo-img {
+        width: 100%;
+    }
+    
+    .table-striped>tbody>tr:nth-of-type(even) {
+        background-color: #EDF2F6;
+    }
+    
+    .custom-page-heading {
+        border-top: 0;
+        padding: 10px;
+    }
+    
+    .ibox-title {
+        border-width: 1px 0 0;
+    }
+    
+    form.search-box .form-group {
+        margin-bottom: 15px;
+    }
+    
+    form.search-box .form-group {
+        margin-right: 15px;
+    }
+    
+    form.search-box .checkbox-group-title {
+        display: inline-block;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    form.search-box .m-b-10 {
+        margin-bottom: 10px;
+    }
+    
+    form.search-box .m-t-5 {
+        margin-top: 5px;
+    }
+    
+    label.error {
+        margin: 5px 0 0 10px;
+    }
+    
+    .i-checks label.error {
+        margin-left: 20px;
+        display: block;
+    }
+    
+    .help-block {
+        margin-bottom: 0;
+    }
+    
+    .nav.navbar-top-links .link-active {
+        color: #1ab394;
+        border-bottom: 2px solid #1ab394;
+    }
+    
+    .nav.navbar-top-links .link-active > a {
+        color: #1ab394;
+    }
+    
+    .nav.navbar-top-links .link-admin {
+        color: #1ab394;
+        margin-left: 40px;
+    }
+    
+    .navbar-top-links li a {
+        padding: 20px 15px;
+    }
+    
+    .ibox-title-table {
+        padding: 11px 7px 7px 11px;
+        min-height: 35px;
+        background-color: #eee;
+    }
+    
+    .ibox-content-table {
+        padding: 20px 0;
+        border-top: 0;
+        padding-top: 0;
+    }
+    
+    .ibox-title-table h5 {
+        margin: 0;
+        font-size: 12px;
+    }
+    
+    .m-b-0 {
+        margin-bottom: 0;
+    }
+    
+    .m-r-10 {
+        margin-right: 10px;
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1440px) {
+        .navbar-right {
+            float: none!important;
+        }
+    }
+    
+    @media screen and (max-width: 768px) {
+        .navbar-header {
+            display: block;
+        }
+        .navbar-right {
+            float: none;
+        }
+        .checkbox input[type=checkbox],
+        .checkbox-inline input[type=checkbox],
+        .radio input[type=radio],
+        .radio-inline input[type=radio] {
+            margin-left: 0;
+        }
+        form.search-box .form-group {
+            margin-right: 0px;
+        }
+        form.search-box .checkbox-group label {
+            margin-right: 20px;
+        }
+        .navbar-top-links li a {
+            padding: 15px 10px 0 10px;
+        }
+        .navbar-top-links li:first-child {
+            margin-left: 15px;
+        }
+        .nav.navbar-top-links .link-admin {
+            color: #1ab394;
+            margin-left: 15px;
+        }
+        .nav.navbar-top-links .link-active > a {
+            min-height: 40px;
+        }
+    }
+
+    .inmodal .modal-header {
+        padding: 10px;
+        text-align: left;
+    }
+
+    .inmodal .modal-title {
+        font-size: 16px;
+    }
+
+    .modal-body {
+        padding: 20px 10px 10px 10px;
+        max-height: 400px;
+        overflow-y: auto;
+    }

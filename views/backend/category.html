@@ -1,0 +1,120 @@
+<div class="ibox">
+    <div class="ibox-title">
+        类别 <small>类别管理</small>
+    </div>
+    <div class="ibox-content">
+        {{range $index, $elem := .Categorys}}
+            <span style="cursor: pointer;" class="label label-primary" data-type="{{$elem.Id}}">{{$elem.Name}}</span>
+        {{end}}
+    </div>
+    <div class="ibox-footer">
+        <span class="pull-right">
+        </span>
+        <div class="row">
+            <div class="col-md-2">
+                <input type="text" name="name" placeholder="输入类别名称" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-info" id="add">添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- .modal-lg .modal-md或者 .modal-sm 可以控制模态层大小，原理和栅格化相同 -->
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                提示
+            </div>
+            <div class="modal-body" id="modal-body">
+                登录成功
+            </div>
+            <div class="modal-footer">
+                <!-- 模态层的尾部  -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#add').on('click',function(){
+        category_name = $('input[name="name"]').val()
+        if(!category_name){
+            swal("请输入类别名称");
+        } else{
+            $.ajax({
+                url: "/docategory",
+                method: "post",
+                data:{
+                    name: category_name,
+                },
+                success: function(json){
+                    if(json.Code == 200){
+                        swal({
+                            title: "创建成功！",
+                            type: "success",
+                            timer: 2000
+                        },function(){
+                            window.location.href = window.location.href;
+                        });
+                    }else{
+                        swal({
+                            title: "创建失败！",
+                            type: "error",
+                            timer: 2000
+                        });
+                    }
+                }
+            });
+        }
+    })
+
+
+    $('.label').on('dblclick',function(){
+        id = $(this).attr('data-type')
+        if(!id){
+            swal("非法操作!");
+            return
+        }
+        swal({
+            title: "是否删除["+$(this).html()+"]？",
+            text: "点击确认后，类别将被删除!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确认",
+            closeOnConfirm: false
+        }, function() {
+            $.ajax({
+                url: "/docategory",
+                method: "post",
+                data:{
+                    id:id,
+                    remove:1,
+                },
+                success: function(json){
+                    if(json.Code == 200){
+                        swal({
+                            title: "删除成功！",
+                            type: "success",
+                            timer: 2000
+                        },function(){
+                            window.location.href = window.location.href;
+                        })
+                    }else{
+                        swal({
+                            title: "删除失败！",
+                            type: "error",
+                            timer: 2000
+                        });
+                    }
+                }
+            });
+
+        });
+    })
+
+</script>

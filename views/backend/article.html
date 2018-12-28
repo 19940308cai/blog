@@ -1,0 +1,317 @@
+<link rel="stylesheet" href="static/css/eitormd/editormd.min.css">
+<style>
+    .label-warp-user .label {
+        line-height: 3;
+    }
+
+    .label-normal {
+        background: #ffffff;
+        border: 1px solid #cccccc;
+        cursor: pointer;
+    }
+
+    .label-select {
+        background: #000000;
+        color: #ffffff;
+        border: 1px solid #ffffff;
+        cursor: pointer;
+    }
+
+    .message-row {
+        margin-bottom: 14px;
+    }
+
+    .addicon {
+        font-style: normal;
+        color: #1a7bb9;
+    }
+
+</style>
+<div id="test-editormd">
+    <textarea style="display:none;">{{.content}}</textarea>
+</div>
+<div class="modal inmodal fade in" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- .modal-lg .modal-md或者 .modal-sm 可以控制模态层大小，原理和栅格化相同 -->
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                补充资料
+            </div>
+            <div class="modal-body" id="modal-body">
+
+                <div class="row message-row">
+                    <div class="col-md-12">
+                        <h5>博客名称:</h5>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" name="title" placeholder="请输入博客名称" value="{{.title}}">
+                    </div>
+                </div>
+
+                <div class="row message-row label-warp-user">
+                    <div class="col-md-12">
+                        <h5>请选择分类(单选):&nbsp;<a href="javascript:;" style="text-decoration: underline;"
+                                           class="addicon">新建分类</a></h5>
+                    </div>
+                    <div class="col-md-12" id="addcategory" style="display: none;">
+                        <div class="input-group">
+                            <input type="text" name="name" class="form-control" placeholder="请输入分类名称">
+                            <span class="input-group-btn"><button type="button" class="btn btn-primary"
+                                                                  id="addcategorybtn">追加分类</button></span>
+                        </div>
+                    </div>
+                    <div id="label-warp-user" class="col-md-12" style="margin-top: 12px;border-top: 1px dotted #CCCCCC">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-white" type="submit" id="cancel">取消</button>
+                <button class="btn btn-primary" type="submit" id="end">下一步</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-right">
+        <button type="button" class="btn btn-primary" id="send">我要发布</button>
+    </div>
+</div>
+<input type="hidden" id="article_id" value="{{.articleId}}">
+<input type="hidden" id="category_id" value="{{.category_id}}">
+<script src="static/js/eitormd/editormd.min.js"></script>
+<script type="text/javascript">
+    var testEditor;
+
+    $(function () {
+        var widgets = [];
+        testEditor = editormd("test-editormd", {
+            width: "100%",
+            height: 750,
+            path: 'static/lib/',
+            disabledKeyMaps: [
+                "Ctrl-B", "F11", "F10"  // disable some default keyboard shortcuts handle
+            ],
+            saveHTMLToTextarea: true,
+            flowChart: true,
+            onchange: function () {
+                $.ajax({
+                    url: "/content",
+                    method: "post",
+                    data: {
+                        article_id: $("#article_id").val(),
+                        content: testEditor.getMarkdown()
+                    },
+                    success: function (json) {
+                        if (json.Code != 200) {
+                            swal({
+                                title: "保存内容失败,建议稍后重试.",
+                                type: "error",
+                                timer: 1000
+                            });
+                        }
+                    }
+                });
+            },
+            onload: function () {
+                var keyMap = {
+                    "Ctrl-S": function (cm) {
+                        alert("Ctrl+S");
+                        //return false;
+                    },
+                    "Ctrl-A": function (cm) { // default Ctrl-A selectAll
+                        // custom
+                        alert("Ctrl+A");
+                        cm.execCommand("selectAll");
+                    }
+                    //"Shift-2" : function(cm){
+                    //}
+                };
+                this.cm.on("keyup", function (cm) {
+                    //$("#test").remove();
+                });
+                // setting signle key
+                var keyMap2 = {
+                    "Ctrl-T": function (cm) {
+                        alert("Ctrl+T");
+                    }
+                };
+                this.addKeyMap(keyMap);
+                this.addKeyMap(keyMap2);
+                this.removeKeyMap(keyMap2);  // remove signle key
+            }
+        });
+        if (parseInt($('#article_id').val()) <= 0) {
+            swal({
+                title: "博客初始化失败,请稍后再试...",
+                type: "error"
+            });
+        }
+
+        function getArticleCategory() {
+            $.ajax({
+                url: "/category",
+                method: "get",
+                success: function (json) {
+                    if (json.Code == 200) {
+                        $('#label-warp-user').html("")
+                        var category_id = $("#category_id").val()
+                        // if (category_id) {
+                        //     var categorys = category_id.split(",")
+                        //     categorys.splice(0, 1)
+                        // }
+                        for (var index in json.Data) {
+                            if (json.Data[index]['Id'] == category_id) {
+                                $('#label-warp-user').append('<span class="label label-select article-label" data-value="' + json.Data[index]['Id'] + '">' + json.Data[index]['Name'] + '</span>\n')
+                            } else {
+                                $('#label-warp-user').append('<span class="label label-normal article-label" data-value="' + json.Data[index]['Id'] + '">' + json.Data[index]['Name'] + '</span>\n')
+                            }
+                            // if (categorys && categorys.indexOf(json.Data[index]['Id'].toString()) != -1) {
+                            //     $('#label-warp-user').append('<span class="label label-select article-label" data-value="' + json.Data[index]['Id'] + '">' + json.Data[index]['Name'] + '</span>\n')
+                            // } else {
+                            //     $('#label-warp-user').append('<span class="label label-normal article-label" data-value="' + json.Data[index]['Id'] + '">' + json.Data[index]['Name'] + '</span>\n')
+                            // }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        $('#label-warp-user').bind('click', '.article-label', function (evt) {
+            if ($(evt.target).hasClass("article-label")) {
+                var len = $('.article-label').length
+                var index = $("#category_id").val()
+                if (index) {
+                    var len = $('.article-label').length
+                    $("#category_id").val();
+                    for (var i = 0; i < len; i++) {
+                        if($($('.article-label')[i]).hasClass("label-select")) {
+                            $($('.article-label')[i]).attr("class", "label article-label label-normal")
+                        }
+                    }
+                }
+                $(evt.target).attr("class", "label article-label label-select")
+                var category_id = $("#category_id").val()
+                var select_value = $(evt.target).attr("data-value")
+                category_id = select_value
+                $("#category_id").val(category_id);
+
+            }
+
+            // if ($(evt.target).hasClass("article-label")) {
+            //     if ($(evt.target).hasClass("label-select")) {
+            //         $(evt.target).attr("class", "label article-label label-normal")
+            //         var category_id = $("#category_id").val()
+            //         var select_value = $(evt.target).attr("data-value")
+            //         var new_category_id = category_id.replace("," + select_value, "")
+            //         $("#category_id").val(new_category_id);
+            //     } else {
+            //         $(evt.target).attr("class", "label article-label label-select")
+            //         var category_id = $("#category_id").val()
+            //         var select_value = $(evt.target).attr("data-value")
+            //         category_id += "," + select_value
+            //         $("#category_id").val(category_id);
+            //     }
+            // }
+        })
+
+
+        $('.addicon').click(function () {
+            $('#addcategory').toggle()
+        })
+
+        $('#addcategorybtn').on('click', function () {
+            category_name = $('input[name="name"]').val()
+            if (!category_name) {
+                swal("请输入类别名称");
+            } else {
+                $.ajax({
+                    url: "/docategory",
+                    method: "post",
+                    data: {
+                        name: category_name,
+                    },
+                    success: function (json) {
+                        if (json.Code == 200) {
+                            getArticleCategory()
+                        } else {
+                            swal({
+                                title: "初始化时失败,请稍后重试...",
+                                type: "error",
+                                timer: 1000
+                            });
+                        }
+                    }
+                });
+            }
+        })
+
+        $('#send').on('click', function () {
+            var text = testEditor.getMarkdown()
+            if (!text) {
+                swal({title: "没有任何输入！", type: "error", timer: 1000});
+            } else {
+                $.ajax({
+                    url: "/category",
+                    method: "get",
+                    success: function (json) {
+                        if (json.Code == 200) {
+                            $('#myModal').modal('show')
+                            getArticleCategory()
+                        } else {
+                            swal({
+                                title: "初始化时失败,请稍后重试...",
+                                type: "error",
+                                timer: 1000
+                            });
+                        }
+                    }
+                });
+            }
+        })
+
+        $('#end').on('click', function () {
+            var article_title = $('input[name="title"]').val()
+            if (!article_title) {
+                swal({
+                    title: "博客名称不能为空",
+                    type: "error",
+                    timer: 1000
+                });
+                return false;
+            } else {
+                $.ajax({
+                    url: "/doarticle",
+                    method: "post",
+                    data: {
+                        article_id: $("#article_id").val(),
+                        title: article_title,
+                        category_id: $("#category_id").val()
+                    },
+                    success: function (json) {
+                        if (json.Code == 200) {
+                            swal({
+                                title: "发布博客成功...",
+                                type: "success",
+                                timer: 1000
+                            }, function () {
+                                $('#myModal').modal('hide')
+                                window.location.href = "/articles"
+                            });
+                        } else {
+                            swal({
+                                title: json.Data,
+                                type: "error",
+                                timer: 1000
+                            });
+                        }
+                    }
+                });
+            }
+        })
+
+        $('#cancel').on('click', function () {
+            $('#myModal').modal('hide')
+        })
+    });
+</script>

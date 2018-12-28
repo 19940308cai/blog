@@ -1,0 +1,110 @@
+<div class="ibox">
+    <div class="ibox-title ">
+        <div class="row">
+            <div class="col-md-5" style="font-size: 15px;">
+                博客
+                <small>博客列表</small>
+            </div>
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-3 input-group text-right" style="padding-right: 5px;">
+                <input type="text" class="form-control" name="search" placeholder="输入关键字搜索">
+                <span class="input-group-btn"><button type="button" class="btn btn-primary">搜索</button> </span>
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>名称</th>
+                <th>类别</th>
+                <th>时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $index, $elem := .articles}}
+            <tr>
+                <td><a href="javascript:;" style="text-decoration: underline;">{{$elem.Title}}</a></td>
+                <td>{{$elem.Category_name}}</td>
+                <td>{{$elem.Created_at}}</td>
+                <td>
+                    <a href="/article?action=update&article_id={{$elem.Id}}" type="button" class="btn btn-outline btn-primary btn-xs">编辑</a>
+                    <button type="button" data-value="{{$elem.Id}}" class="remove btn btn-outline btn-danger btn-xs">移除</button>
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+    <div class="ibox-footer">
+        <span class="pull-right">
+          <!-- 这里是右页脚 -->
+        </span>
+        <div class="row text-center">
+            <nav aria-label="col-md-12 Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        $('.remove').on('click',function(){
+            article_id = $(this).attr("data-value")
+            swal({
+                title: "您确定要删除该篇博客吗?",
+                text: "点击确认后,类别将被删除!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确认",
+                closeOnConfirm: false
+            },function(){
+                $.ajax({
+                    url: "/doarticles",
+                    method: "post",
+                    data:{
+                        article_id:article_id,
+                        remove:1
+                    },
+                    success: function(json){
+                        if(json.Code == 200){
+                            swal({
+                                title: "删除成功！",
+                                type: "success",
+                                timer: 1500
+                            },function(){
+                                window.location.href = window.location.href;
+                            })
+                        }else{
+                            swal({
+                                title: "删除失败！",
+                                type: "error",
+                                timer: 2000
+                            });
+                        }
+                    }
+                });
+            })
+        })
+    })
+</script>
+
