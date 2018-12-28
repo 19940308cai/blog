@@ -12,6 +12,7 @@ func init() {
 
 	//首页
 	beego.Router("/index", &backend.IndexController{})
+	beego.Router("/", &backend.IndexController{}, "get:Get")
 
 	//类别
 	beego.Router("/category", &backend.CategoryController{})

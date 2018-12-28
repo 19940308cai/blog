@@ -32,7 +32,7 @@ func (self *BaseControoler) Prepare() {
 		needSeesion = true
 		session := self.GetSession("user")
 		if session == nil {
-			self.Ctx.WriteString("请登录")
+			self.Ctx.Redirect(302, "/login")
 		} else {
 			UserId, _ = session.(int)
 		}
