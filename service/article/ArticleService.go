@@ -8,6 +8,7 @@ import (
 	"blog/warp"
 	"blog/models/category"
 	"fmt"
+	"blog/util"
 )
 
 type ArticleService struct {
@@ -53,13 +54,21 @@ func (self *ArticleService) GetArticle(conditionStruct ...*models.ConditionStruc
 
 }
 
-func (self *ArticleService) GetAllArticles() ([]warp.ArticleWarp, error) {
+func (self *ArticleService) GetAllArticles(page, size int) ([]warp.ArticleWarp, util.PageUtil, error) {
 	articleModel := article.NewArticleModel()
-	articlesEntity, err := articleModel.FindAllCanSetCondition(
+	articleCount, err := articleModel.GetCountTableCanSetCondition(
+		models.NewConditionStruct("Remove", "=", 0),
+	)
+	pageUtil := util.NewPageUtil(int(articleCount), page, size)
+	if err != nil {
+		return nil, pageUtil, err
+	}
+
+	articlesEntity, err := articleModel.FindListCanSetConditionWithPage(pageUtil,
 		models.NewConditionStruct("Remove", "=", 0),
 	)
 	if err != nil {
-		return nil, err
+		return nil, pageUtil, err
 	}
 
 	categoryModel := category.NewCategoryModel()
@@ -68,7 +77,7 @@ func (self *ArticleService) GetAllArticles() ([]warp.ArticleWarp, error) {
 	)
 	if err != nil {
 		logs.Debug("查询文章,扫描到没有文章分类....")
-		return nil, err
+		return nil, pageUtil, err
 	}
 	var categoryIdNameMap map[int]string = make(map[int]string)
 	for _, category := range *categorysEntitys {
@@ -84,7 +93,7 @@ func (self *ArticleService) GetAllArticles() ([]warp.ArticleWarp, error) {
 			articlesWarp[step].Category_name = "无"
 		}
 	}
-	return articlesWarp, nil
+	return articlesWarp, pageUtil, nil
 }
 
 func (self *ArticleService) Update(articleId int, params map[string]interface{}) (int64, error) {

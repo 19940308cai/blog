@@ -4,6 +4,7 @@ import (
 	"time"
 	"github.com/astaxie/beego/orm"
 	"blog/models"
+	"blog/util"
 )
 
 type Article struct {
@@ -37,9 +38,15 @@ func (self *articleModal) FindOneCanSetCondition(conditionStructs ...*models.Con
 	return articleEntity, err
 }
 
-func (self *articleModal) FindAllCanSetCondition(conditionStructs ...*models.ConditionStruct) (*[]Article, error){
+func (self *articleModal) FindAllCanSetCondition(conditionStructs ...*models.ConditionStruct) (*[]Article, error) {
 	var articles []Article
-	_ , err := self.AppendConditionFilter(conditionStructs...).All(&articles)
+	_, err := self.AppendConditionFilter(conditionStructs...).All(&articles)
+	return &articles, err
+}
+
+func (self *articleModal) FindListCanSetConditionWithPage(pageUtil util.PageUtil, conditionStructs ...*models.ConditionStruct) (*[]Article, error) {
+	var articles []Article
+	_, err := self.GetDataCanSetConditionAndLimit(pageUtil, conditionStructs...).All(&articles)
 	return &articles, err
 }
 

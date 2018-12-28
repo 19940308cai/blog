@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"errors"
 	"strings"
+	"blog/util"
 )
 
 var OperatorsMap map[string]string
@@ -74,6 +75,14 @@ func (self *BaseModal) InsertDataToTable(insertStruct interface{}) (int64, error
 
 func (self *BaseModal) UpdateDataInTableCanSetCondition(udpateParams orm.Params, ConditionStructs ...*ConditionStruct) (int64, error) {
 	return self.AppendConditionFilter(ConditionStructs...).Update(udpateParams)
+}
+
+func (self *BaseModal) GetDataCanSetConditionAndLimit(pageUtil util.PageUtil, ConditionStructs ...*ConditionStruct) orm.QuerySeter {
+	return self.AppendConditionFilter(ConditionStructs...).Limit(pageUtil.PageSize, pageUtil.PageNo)
+}
+
+func (self *BaseModal) GetCountTableCanSetCondition(ConditionStructs ...*ConditionStruct) (int64, error) {
+	return self.AppendConditionFilter(ConditionStructs...).Count()
 }
 
 func (self *BaseModal) AppendConditionFilter(ConditionStructs ...*ConditionStruct) orm.QuerySeter {

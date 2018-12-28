@@ -4,6 +4,7 @@ import (
 	"blog/service/article"
 	"blog/models"
 	"blog/service/content"
+	"fmt"
 )
 
 //博客列表
@@ -13,20 +14,34 @@ type ArticlesController struct {
 
 func (self *ArticlesController) Get() {
 	articleService := service.NewArticleService()
-	articles, err := articleService.GetAllArticles()
+
+	page, err := self.GetInt("page")
+	if err != nil{
+		page = 1
+	}
+	if page <= 0 {
+		page = 1
+	}
+	size, err := self.GetInt("size")
+	if err != nil {
+		size = 10
+	}
+	articles, pageUtil, err := articleService.GetAllArticles(page, size)
 	if err == nil {
+		fmt.Println(pageUtil)
+		self.Data["page"] = pageUtil
 		self.Data["articles"] = articles
 	}
 	self.view("博客列表")
 }
 
 func (self *ArticlesController) Post() {
-	article_id , err := self.GetInt("article_id")
+	article_id, err := self.GetInt("article_id")
 	if err != nil {
 		self.MakeErrorJson(500, "article_id不是合法的参数...")
 		return
 	}
-	remove , err := self.GetInt("remove")
+	remove, err := self.GetInt("remove")
 	if err != nil {
 		self.MakeErrorJson(500, "remove不是合法的参数...")
 		return
@@ -38,7 +53,6 @@ func (self *ArticlesController) Post() {
 	self.MakeSuccessJson(200, "移除成功...")
 	return
 }
-
 
 //博客
 type ArticleController struct {

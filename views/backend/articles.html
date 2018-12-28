@@ -30,44 +30,53 @@
                 <td>{{$elem.Category_name}}</td>
                 <td>{{$elem.Created_at}}</td>
                 <td>
-                    <a href="/article?action=update&article_id={{$elem.Id}}" type="button" class="btn btn-outline btn-primary btn-xs">编辑</a>
-                    <button type="button" data-value="{{$elem.Id}}" class="remove btn btn-outline btn-danger btn-xs">移除</button>
+                    <a href="/article?action=update&article_id={{$elem.Id}}" type="button"
+                       class="btn btn-outline btn-primary btn-xs">编辑</a>
+                    <button type="button" data-value="{{$elem.Id}}" class="remove btn btn-outline btn-danger btn-xs">
+                        移除
+                    </button>
                 </td>
             </tr>
             {{end}}
             </tbody>
         </table>
     </div>
+
     <div class="ibox-footer">
         <span class="pull-right">
           <!-- 这里是右页脚 -->
         </span>
         <div class="row text-center">
+        {{if ge .page.TotalPage 0}}
             <nav aria-label="col-md-12 Page navigation">
                 <ul class="pagination">
+                    {{/*<li>*/}}
+                        {{/*<a href="#" aria-label="Previous">*/}}
+                            {{/*<span aria-hidden="true">&laquo;</span>*/}}
+                        {{/*</a>*/}}
+                    {{/*</li>*/}}
+                {{range $key, $value := .page.Navs}}
+                        {{/*{{printf "%T" ($value)}}*/}}
+                        {{/*{{printf "%T" ($.page.CurrentPage)}}*/}}
                     <li>
-                        <a href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
+                        <a href={{printf "/articles?page=%d&size=10" ($value)}} {{if eq $value $.page.CurrentPage}}{{print "style='background: #DDDDDD;'"}}{{end}}>{{$value}}</a>
                     </li>
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li>
-                        <a href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
+                {{end}}
+                    {{/*<li>*/}}
+                        {{/*<a href="#" aria-label="Next">*/}}
+                            {{/*<span aria-hidden="true">&raquo;</span>*/}}
+                        {{/*</a>*/}}
+                    {{/*</li>*/}}
                 </ul>
             </nav>
+        {{else}}
+            {{end}}
         </div>
     </div>
 </div>
 <script>
-    $(function(){
-        $('.remove').on('click',function(){
+    $(function () {
+        $('.remove').on('click', function () {
             article_id = $(this).attr("data-value")
             swal({
                 title: "您确定要删除该篇博客吗?",
@@ -77,24 +86,24 @@
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "确认",
                 closeOnConfirm: false
-            },function(){
+            }, function () {
                 $.ajax({
                     url: "/doarticles",
                     method: "post",
-                    data:{
-                        article_id:article_id,
-                        remove:1
+                    data: {
+                        article_id: article_id,
+                        remove: 1
                     },
-                    success: function(json){
-                        if(json.Code == 200){
+                    success: function (json) {
+                        if (json.Code == 200) {
                             swal({
                                 title: "删除成功！",
                                 type: "success",
                                 timer: 1500
-                            },function(){
+                            }, function () {
                                 window.location.href = window.location.href;
                             })
-                        }else{
+                        } else {
                             swal({
                                 title: "删除失败！",
                                 type: "error",
