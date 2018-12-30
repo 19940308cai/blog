@@ -14,9 +14,9 @@ type ArticlesController struct {
 
 func (self *ArticlesController) Get() {
 	articleService := service.NewArticleService()
-
+	var uriFormatModal string = "/articles?page=%d&size=10"
 	page, err := self.GetInt("page")
-	if err != nil{
+	if err != nil {
 		page = 1
 	}
 	if page <= 0 {
@@ -26,10 +26,15 @@ func (self *ArticlesController) Get() {
 	if err != nil {
 		size = 10
 	}
-	articles, pageUtil, err := articleService.GetAllArticles(page, size)
+	searchValue := self.GetString("search")
+	if searchValue != "" {
+		uriFormatModal += "&search=" + searchValue
+	}
+	articles, pageUtil, err := articleService.GetAllArticles(page, size, searchValue)
 	if err == nil {
-		fmt.Println(pageUtil)
+		self.Data["uriFormatModal"] = uriFormatModal
 		self.Data["page"] = pageUtil
+		fmt.Println(pageUtil)
 		self.Data["articles"] = articles
 	}
 	self.view("博客列表")

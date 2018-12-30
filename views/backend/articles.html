@@ -9,7 +9,7 @@
             </div>
             <div class="col-md-3 input-group text-right" style="padding-right: 5px;">
                 <input type="text" class="form-control" name="search" placeholder="输入关键字搜索">
-                <span class="input-group-btn"><button type="button" class="btn btn-primary">搜索</button> </span>
+                <span class="input-group-btn"><button id="searchbtn" type="button" class="btn btn-primary">搜索</button> </span>
             </div>
         </div>
     </div>
@@ -50,23 +50,25 @@
         {{if ge .page.TotalPage 0}}
             <nav aria-label="col-md-12 Page navigation">
                 <ul class="pagination">
-                    {{/*<li>*/}}
-                        {{/*<a href="#" aria-label="Previous">*/}}
-                            {{/*<span aria-hidden="true">&laquo;</span>*/}}
-                        {{/*</a>*/}}
-                    {{/*</li>*/}}
-                {{range $key, $value := .page.Navs}}
-                        {{/*{{printf "%T" ($value)}}*/}}
-                        {{/*{{printf "%T" ($.page.CurrentPage)}}*/}}
+                    {{if gt .page.TotalCount 0}}
                     <li>
-                        <a href={{printf "/articles?page=%d&size=10" ($value)}} {{if eq $value $.page.CurrentPage}}{{print "style='background: #DDDDDD;'"}}{{end}}>{{$value}}</a>
+                        <a href={{printf $.uriFormatModal (.page.LeftNextPage)}} aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {{end}}
+                {{range $key, $value := .page.Navs}}
+                    <li>
+                        <a href={{printf $.uriFormatModal ($value)}} {{if eq $value $.page.CurrentPage}}{{print "style='background: #DDDDDD;'"}}{{end}}>{{$value}}</a>
                     </li>
                 {{end}}
-                    {{/*<li>*/}}
-                        {{/*<a href="#" aria-label="Next">*/}}
-                            {{/*<span aria-hidden="true">&raquo;</span>*/}}
-                        {{/*</a>*/}}
-                    {{/*</li>*/}}
+                    {{if gt .page.TotalCount 0}}
+                    <li>
+                        <a href={{printf $.uriFormatModal (.page.RightNextPage)}} aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {{end}}
                 </ul>
             </nav>
         {{else}}
@@ -76,6 +78,10 @@
 </div>
 <script>
     $(function () {
+        $('#searchbtn').on('click', function () {
+            var search = $("input[name='search']").val()
+            window.location.href= "/articles?page=1&size=10&search="+search
+        })
         $('.remove').on('click', function () {
             article_id = $(this).attr("data-value")
             swal({

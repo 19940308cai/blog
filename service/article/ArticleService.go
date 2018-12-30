@@ -54,27 +54,27 @@ func (self *ArticleService) GetArticle(conditionStruct ...*models.ConditionStruc
 
 }
 
-func (self *ArticleService) GetAllArticles(page, size int) ([]warp.ArticleWarp, util.PageUtil, error) {
+func (self *ArticleService) GetAllArticles(page, size int, search ...string) ([]warp.ArticleWarp, util.PageUtil, error) {
 	articleModel := article.NewArticleModel()
-	articleCount, err := articleModel.GetCountTableCanSetCondition(
-		models.NewConditionStruct("Remove", "=", 0),
-	)
+	var conditionStructs []*models.ConditionStruct
+	conditionStructs = append(conditionStructs, models.NewConditionStruct("Remove", "=", 0))
+	if len(search) > 0 {
+		fmt.Println(search)
+		conditionStructs = append(conditionStructs, models.NewConditionStruct("Title", "rllike", search))
+	}
+	articleCount, err := articleModel.GetCountTableCanSetCondition(conditionStructs...)
 	pageUtil := util.NewPageUtil(int(articleCount), page, size)
 	if err != nil {
 		return nil, pageUtil, err
 	}
 
-	articlesEntity, err := articleModel.FindListCanSetConditionWithPage(pageUtil,
-		models.NewConditionStruct("Remove", "=", 0),
-	)
+	articlesEntity, err := articleModel.FindListCanSetConditionWithPage(pageUtil, conditionStructs...)
 	if err != nil {
 		return nil, pageUtil, err
 	}
 
 	categoryModel := category.NewCategoryModel()
-	categorysEntitys, err := categoryModel.FindAllCanSetCondition(
-		models.NewConditionStruct("Remove", "=", 0),
-	)
+	categorysEntitys, err := categoryModel.FindAllCanSetCondition(models.NewConditionStruct("Remove", "=", 0))
 	if err != nil {
 		logs.Debug("查询文章,扫描到没有文章分类....")
 		return nil, pageUtil, err
