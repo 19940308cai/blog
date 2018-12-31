@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="static/css/eitormd/editormd.min.css">
+<link rel="stylesheet" href="static/backend/css/eitormd/editormd.min.css">
 <style>
     .label-warp-user .label {
         line-height: 3;
@@ -78,7 +78,7 @@
 </div>
 <input type="hidden" id="article_id" value="{{.articleId}}">
 <input type="hidden" id="category_id" value="{{.category_id}}">
-<script src="static/js/eitormd/editormd.min.js"></script>
+<script src="static/backend/js/eitormd/editormd.min.js"></script>
 <script type="text/javascript">
     var testEditor;
 
@@ -87,7 +87,7 @@
         testEditor = editormd("test-editormd", {
             width: "100%",
             height: 750,
-            path: 'static/lib/',
+            path: 'static/backend/lib/',
             disabledKeyMaps: [
                 "Ctrl-B", "F11", "F10"  // disable some default keyboard shortcuts handle
             ],
