@@ -22,17 +22,15 @@ var UserId int
 
 
 func (self *BaseControoler) Prepare() {
-	if strings.Index(self.Ctx.Request.RequestURI, "category") == -1{
-		if strings.Index(self.Ctx.Request.RequestURI, "login") != -1 {
-			needSeesion = false
+	if strings.Index(self.Ctx.Request.RequestURI, "login") != -1 {
+		needSeesion = false
+	} else {
+		needSeesion = true
+		session := self.GetSession("user")
+		if session == nil {
+			self.Ctx.Redirect(302, "/login")
 		} else {
-			needSeesion = true
-			session := self.GetSession("user")
-			if session == nil {
-				self.Ctx.Redirect(302, "/login")
-			} else {
-				UserId, _ = session.(int)
-			}
+			UserId, _ = session.(int)
 		}
 	}
 }

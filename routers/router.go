@@ -4,10 +4,15 @@ import (
 	"blog/controllers/backend"
 	"github.com/astaxie/beego"
 	"blog/controllers/frontend"
+	"blog/controllers/open"
 )
 
 func init() {
-	//登录
+
+
+	/**
+		应用层
+	 */
 	beego.Router("/login", &backend.LoginController{})
 	beego.Router("/dologin", &backend.LoginController{})
 
@@ -31,10 +36,14 @@ func init() {
 	beego.Router("/content", &backend.ContentController{})
 
 
-
-
 	//前端
 	beego.Router("/frontend/index", &frontend.IndexController{})
 	beego.Router("/frontend/detail", &frontend.DetailIontroller{})
+
+
+	/**
+		服务层
+	 */
+	beego.Router("/open/categorys", &open.CategoryController{})
 
 }
