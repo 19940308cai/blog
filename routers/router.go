@@ -3,6 +3,7 @@ package routers
 import (
 	"blog/controllers/backend"
 	"github.com/astaxie/beego"
+	"blog/controllers/frontend"
 )
 
 func init() {
@@ -28,5 +29,12 @@ func init() {
 
 	//博客正文
 	beego.Router("/content", &backend.ContentController{})
+
+
+
+
+	//前端
+	beego.Router("/frontend/index", &frontend.IndexController{})
+	beego.Router("/frontend/detail", &frontend.DetailIontroller{})
 
 }
