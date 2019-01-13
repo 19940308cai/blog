@@ -46,7 +46,7 @@
             swal("请输入类别名称");
         } else{
             $.ajax({
-                url: "/docategory",
+                url: "/backend/docategory",
                 method: "post",
                 data:{
                     name: category_name,
@@ -89,7 +89,7 @@
             closeOnConfirm: false
         }, function() {
             $.ajax({
-                url: "/docategory",
+                url: "/backend/docategory",
                 method: "post",
                 data:{
                     id:id,

@@ -37,7 +37,7 @@
 <script>
     $("#submit").on("click", function(){
         $.ajax({
-            url: "/dologin",
+            url: "/backend/dologin",
             method: "post",
             data:{
                 username: $("input[name='username']").val(),
@@ -48,7 +48,7 @@
                 $('#myModal').modal('show');
                 if(json.Code == 200){
                     setTimeout(function(){
-                        window.location.href = "/index";
+                        window.location.href = "/backend/index";
                     },1000);
                 }
             }

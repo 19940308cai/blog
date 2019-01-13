@@ -13,30 +13,30 @@ func init() {
 	/**
 		应用层
 	 */
-	beego.Router("/login", &backend.LoginController{})
-	beego.Router("/dologin", &backend.LoginController{})
+	beego.Router("/backend/login", &backend.LoginController{})
+	beego.Router("/backend/dologin", &backend.LoginController{})
 
 	//首页
-	beego.Router("/index", &backend.IndexController{})
-	beego.Router("/", &backend.IndexController{}, "get:Get")
+	beego.Router("/backend/index", &backend.IndexController{})
 
 	//类别
-	beego.Router("/category", &backend.CategoryController{})
-	beego.Router("/docategory", &backend.CategoryController{})
+	beego.Router("/backend/category", &backend.CategoryController{})
+	beego.Router("/backend/docategory", &backend.CategoryController{})
 
 	//博客(复数)
-	beego.Router("/articles", &backend.ArticlesController{})
-	beego.Router("/doarticles", &backend.ArticlesController{})
+	beego.Router("/backend/articles", &backend.ArticlesController{})
+	beego.Router("/backend/doarticles", &backend.ArticlesController{})
 
 	//博客(非复数)
-	beego.Router("/article", &backend.ArticleController{})
-	beego.Router("/doarticle", &backend.ArticleController{})
+	beego.Router("/backend/article", &backend.ArticleController{})
+	beego.Router("/backend/doarticle", &backend.ArticleController{})
 
 	//博客正文
-	beego.Router("/content", &backend.ContentController{})
+	beego.Router("/backend/content", &backend.ContentController{})
 
 
 	//前端
+	beego.Router("/", &frontend.IndexController{}, "get:Get")
 	beego.Router("/frontend/index", &frontend.IndexController{})
 	beego.Router("/frontend/detail", &frontend.DetailIontroller{})
 

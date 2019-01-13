@@ -30,7 +30,7 @@
                 <td>{{$elem.Category_name}}</td>
                 <td>{{$elem.Created_at}}</td>
                 <td>
-                    <a href="/article?action=update&article_id={{$elem.Id}}" type="button"
+                    <a href="/backend/article?action=update&article_id={{$elem.Id}}" type="button"
                        class="btn btn-outline btn-primary btn-xs">编辑</a>
                     <button type="button" data-value="{{$elem.Id}}" class="remove btn btn-outline btn-danger btn-xs">
                         移除
@@ -80,7 +80,7 @@
     $(function () {
         $('#searchbtn').on('click', function () {
             var search = $("input[name='search']").val()
-            window.location.href= "/articles?page=1&size=10&search="+search
+            window.location.href= "/backend/articles?page=1&size=10&search="+search
         })
         $('.remove').on('click', function () {
             article_id = $(this).attr("data-value")
@@ -94,7 +94,7 @@
                 closeOnConfirm: false
             }, function () {
                 $.ajax({
-                    url: "/doarticles",
+                    url: "/backend/doarticles",
                     method: "post",
                     data: {
                         article_id: article_id,

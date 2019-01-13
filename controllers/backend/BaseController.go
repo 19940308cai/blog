@@ -20,6 +20,20 @@ var needSeesion bool = false
 
 var UserId int
 
+func (self *BaseControoler) GetPageAndSize() (int, int) {
+	page, err := self.GetInt("page")
+	if err != nil {
+		page = 1
+	}
+	if page <= 0 {
+		page = 1
+	}
+	size, err := self.GetInt("size")
+	if err != nil {
+		size = 10
+	}
+	return page, size
+}
 
 func (self *BaseControoler) Prepare() {
 	if strings.Index(self.Ctx.Request.RequestURI, "login") != -1 {
@@ -28,7 +42,7 @@ func (self *BaseControoler) Prepare() {
 		needSeesion = true
 		session := self.GetSession("user")
 		if session == nil {
-			self.Ctx.Redirect(302, "/login")
+			self.Ctx.Redirect(302, "/backend/login")
 		} else {
 			UserId, _ = session.(int)
 		}
