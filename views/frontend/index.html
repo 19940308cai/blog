@@ -48,6 +48,9 @@
         background: black;
         color: #ffffff;
     }
+    .padding{
+        padding: 30px 50px !important;
+    }
 </style>
 <div class="fh5co-loader"></div>
 <div id="page">
@@ -65,33 +68,16 @@
         </nav>
         <div class="featured">
             <span>Hi~</span>
-            <h2>I'm Cookie Cat</a></h2>
+            <h2>I'm Cookie Cat</h2>
         </div>
     </div>
     <div id="fh5co-main-content">
-        <div class="fh5co-post">
-            <div class="fh5co-entry padding">
-                <div>
-                    <span class="fh5co-post-date">2019/01/01 00:00:00</span>
-                    <h2><a href="/frontend/detail">Mysql is Better!</a></h2>
-                    <p>How two simple exercises changed my life</p>
-                </div>
-            </div>
-            <div class="fh5co-entry padding">
-                <div>
-                    <span class="fh5co-post-date">2019/01/01 00:00:00</span>
-                    <h2><a href="/frontend/detail">Mysql is Better!</a></h2>
-                    <p>How two simple exercises changed my life</p>
-                </div>
-            </div>
-
-
-            <footer style="padding: 0px !important;">
-                <a href="" class="read-more" style="text-decoration: underline;">
-                    点击查看更多
-                </a>
-            </footer>
-        </div>
+        <div class="fh5co-post" id="content_warp"></div>
+        <footer style="padding: 10px 0px !important;">
+            <a href="javascript:;" class="read-more" style="text-decoration: underline;">
+                点击查看更多
+            </a>
+        </footer>
     </div>
 </div>
 
@@ -113,6 +99,27 @@
                 }
             }
         });
+
+        $.ajax({
+            url: "/open/articles",
+            method: "get",
+            success: function (json) {
+                if(json.Code == 200){
+                    $('.read-more').attr("data-href", json.Data['uriFormatModal'])
+                    for(var key in json.Data['articles']){
+                        var html = '            <div class="fh5co-entry padding">\n' +
+                                '                <div>\n' +
+                                '                    <span class="fh5co-post-date">'+json.Data['articles'][key]['Created_at']+'</span>\n' +
+                                '                    <h2><a href="/frontend/detail">'+json.Data['articles'][key]['Title']+'</a></h2>\n' +
+                                '                    <p>'+json.Data['articles'][key]['Content']+'</p>\n' +
+                                '                </div>\n' +
+                                '            </div>'
+                        $("#content_warp").append(html)
+                    }
+                }
+            }
+        });
+
 
         $('#category-btn').on('click',function(){
             if($(this).attr('data-value') == 1){

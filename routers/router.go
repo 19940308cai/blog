@@ -11,7 +11,7 @@ func init() {
 
 
 	/**
-		应用层
+		应用层-前台
 	 */
 	beego.Router("/backend/login", &backend.LoginController{})
 	beego.Router("/backend/dologin", &backend.LoginController{})
@@ -35,7 +35,9 @@ func init() {
 	beego.Router("/backend/content", &backend.ContentController{})
 
 
-	//前端
+	/**
+		应用层-后台
+	 */
 	beego.Router("/", &frontend.IndexController{}, "get:Get")
 	beego.Router("/frontend/index", &frontend.IndexController{})
 	beego.Router("/frontend/detail", &frontend.DetailIontroller{})
@@ -45,5 +47,6 @@ func init() {
 		服务层
 	 */
 	beego.Router("/open/categorys", &open.CategoryController{})
+	beego.Router("/open/articles", &open.ArticlesController{})
 
 }

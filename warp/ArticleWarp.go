@@ -5,12 +5,13 @@ import (
 )
 
 type ArticleWarp struct {
-	Id          interface{}
-	Title       interface{}
-	Category_id interface{}
-	Author_id   interface{}
-	Remove      interface{}
-	Created_at  interface{}
+	Id            interface{}
+	Title         interface{}
+	Category_id   interface{}
+	Author_id     interface{}
+	Content       interface{}
+	Remove        interface{}
+	Created_at    interface{}
 	Category_name interface{}
 }
 

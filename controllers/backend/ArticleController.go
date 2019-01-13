@@ -4,6 +4,7 @@ import (
 	"blog/service/article"
 	"blog/models"
 	"blog/service/content"
+	"blog/util"
 )
 
 //博客列表
@@ -14,12 +15,10 @@ type ArticlesController struct {
 func (self *ArticlesController) Get() {
 	articleService := service.NewArticleService()
 	var uriFormatModal string = "/backend/articles?page=%d&size=10"
-	searchValue := self.GetString("search")
-	if searchValue != "" {
-		uriFormatModal += "&search=" + searchValue
-	}
-	page, size := self.GetPageAndSize()
-	articles, pageUtil, err := articleService.GetAllArticles(page, size, searchValue)
+	helper := util.NewHelper()
+	uriFormatModal, searchMap := helper.MakeUriAndSearchMap(uriFormatModal, self.Ctx.Input)
+	page, size := helper.MakePageAndSize(self.Ctx.Input)
+	articles, pageUtil, err := articleService.GetAllArticles(page, size, searchMap...)
 	if err == nil {
 		self.Data["uriFormatModal"] = uriFormatModal
 		self.Data["page"] = pageUtil

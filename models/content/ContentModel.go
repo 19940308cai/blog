@@ -35,6 +35,12 @@ func (self *contentModal) FindOneCanSetCondition(conditionStructs ...*models.Con
 	return articleContentEntity, err
 }
 
+func (self *contentModal) FindAllCanSetCondition(conditionStructs ...*models.ConditionStruct) (*[]ArticlesContent, error) {
+	var articlesContents []ArticlesContent
+	_, err := self.AppendConditionFilter(conditionStructs...).All(&articlesContents)
+	return &articlesContents, err
+}
+
 func (self *contentModal) Add(articleContentEntity *ArticlesContent) (int64, error) {
 	return self.InsertDataToTable(articleContentEntity)
 }
