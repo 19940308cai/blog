@@ -22,9 +22,10 @@ func (self *ContentController) Post() {
 			self.MakeErrorJson(500, "不是合法的文章ID...")
 			return
 		}
-		userInput := self.GetString("content")
+		markdownContent := self.GetString("content")
+		htmlContent := self.GetString("html_content")
 		contentService := content.NewContentService()
-		status := contentService.ChangeContent(articleId, userInput)
+		status := contentService.ChangeContent(articleId, markdownContent, htmlContent)
 		if status == false {
 			self.MakeErrorJson(500, "更新文章内容失败...")
 			return

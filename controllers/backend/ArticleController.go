@@ -94,6 +94,11 @@ func (self *ArticleController) Post() {
 			self.MakeErrorJson(500, "缺少博客名称...")
 			return
 		}
+		describe := self.GetString("describe")
+		if describe == "" {
+			self.MakeErrorJson(500,"缺少博客描述...")
+			return
+		}
 		categoryId, _ := self.GetInt("category_id");
 		if categoryId <= 0 {
 			self.MakeErrorJson(500, "参数不合法....")
@@ -105,6 +110,7 @@ func (self *ArticleController) Post() {
 		params["title"] = title
 		params["categoryId"] = categoryId
 		params["remove"] = remove
+		params["describe"] = describe
 		_, err := articleService.Update(articleId, params)
 		if err != nil {
 			self.MakeErrorJson(500, "发布博客失败...")

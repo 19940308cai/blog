@@ -61,7 +61,7 @@ func (self *ArticleService) GetAllArticles(page, size int, searchMaps ...map[str
 	conditionStructs = append(conditionStructs, models.NewConditionStruct("Remove", "=", 0))
 	if _, ok := searchMaps[0]["key"]; ok == true {
 		for _, search := range searchMaps {
-			conditionStructs = append(conditionStructs, models.NewConditionStruct(search["key"], "rllike", search["value"]))
+			conditionStructs = append(conditionStructs, models.NewConditionStruct(search["key"], "istartswith", search["value"]))
 		}
 	}
 	articleCount, err := articleModel.GetCountTableCanSetCondition(conditionStructs...)
@@ -87,16 +87,16 @@ func (self *ArticleService) GetAllArticles(page, size int, searchMaps ...map[str
 	}
 
 	//获取文章主体内容
-	contentModel := content.NewContentModal()
-	contentEntitys, err := contentModel.FindAllCanSetCondition()
-	if err != nil {
-		logs.Debug("查询文章主体内容空....")
-		return nil, pageUtil, err
-	}
-	var contentTextArticleIdMap map[int]string = make(map[int]string)
-	for _, content := range *contentEntitys {
-		contentTextArticleIdMap[content.Article_id] = content.Content
-	}
+	//contentModel := content.NewContentModal()
+	//contentEntitys, err := contentModel.FindAllCanSetCondition()
+	//if err != nil {
+	//	logs.Debug("查询文章主体内容空....")
+	//	return nil, pageUtil, err
+	//}
+	//var contentTextArticleIdMap map[int]string = make(map[int]string)
+	//for _, content := range *contentEntitys {
+	//	contentTextArticleIdMap[content.Article_id] = content.Content
+	//}
 
 	//组装返回值
 	articlesWarp := warp.ArticleWarp{}.MakeArticles(articlesEntity)
@@ -109,16 +109,16 @@ func (self *ArticleService) GetAllArticles(page, size int, searchMaps ...map[str
 			articlesWarp[step].Category_name = "无"
 		}
 
-		content, ok := contentTextArticleIdMap[article.Id.(int)]
-		if ok {
-			if len(content) > 30 {
-				content = content[:30]
-			}
-			articlesWarp[step].Content = content+"...."
-		} else {
-			logs.Debug(fmt.Sprintf("博客ID: %d 没有映射到对应的Content", article.Id.(int)))
-			articlesWarp[step].Content = "正在生产内容...."
-		}
+		//content, ok := contentTextArticleIdMap[article.Id.(int)]
+		//if ok {
+		//	if len(content) > 30 {
+		//		content = content[:30]
+		//	}
+		//	articlesWarp[step].Content = content+"...."
+		//} else {
+		//	logs.Debug(fmt.Sprintf("博客ID: %d 没有映射到对应的Content", article.Id.(int)))
+		//	articlesWarp[step].Content = "正在生产内容...."
+		//}
 	}
 	return articlesWarp, pageUtil, nil
 }
@@ -141,6 +141,11 @@ func (self *ArticleService) Update(articleId int, params map[string]interface{})
 	if ok {
 		articleEm.Remove = remove.(int)
 		updateFields = append(updateFields, "Remove")
+	}
+	describe, ok := params["describe"]
+	if ok {
+		articleEm.Describe = describe.(string)
+		updateFields = append(updateFields, "Describe")
 	}
 	return articleModel.Update(articleEm, updateFields, models.NewConditionStruct("Id", "=", articleId))
 }

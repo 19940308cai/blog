@@ -48,6 +48,15 @@
                     </div>
                 </div>
 
+                <div class="row message-row">
+                    <div class="col-md-12">
+                        <h5>博客描述:</h5>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" name="describe" placeholder="输入一句话的描述" value="{{.describe}}">
+                    </div>
+                </div>
+
                 <div class="row message-row label-warp-user">
                     <div class="col-md-12">
                         <h5>请选择分类(单选):&nbsp;<a href="javascript:;" style="text-decoration: underline;"
@@ -99,7 +108,8 @@
                     method: "post",
                     data: {
                         article_id: $("#article_id").val(),
-                        content: testEditor.getMarkdown()
+                        content: testEditor.getMarkdown(),
+                        html_content: testEditor.getHTML()
                     },
                     success: function (json) {
                         if (json.Code != 200) {
@@ -272,6 +282,7 @@
 
         $('#end').on('click', function () {
             var article_title = $('input[name="title"]').val()
+            var describe = $('input[name="describe"]').val()
             if (!article_title) {
                 swal({
                     title: "博客名称不能为空",
@@ -286,7 +297,8 @@
                     data: {
                         article_id: $("#article_id").val(),
                         title: article_title,
-                        category_id: $("#category_id").val()
+                        category_id: $("#category_id").val(),
+                        describe: describe,
                     },
                     success: function (json) {
                         if (json.Code == 200) {

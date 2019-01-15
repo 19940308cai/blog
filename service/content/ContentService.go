@@ -26,18 +26,31 @@ func (self *ContentService) GetArticleContent(conditionStruct ...*models.Conditi
 	return articleContent, err
 }
 
-func (self *ContentService) ChangeContent(articleId int, userInput string) bool {
+func (self *ContentService) GetArticleHtmlContent(conditionStruct ...*models.ConditionStruct) (string, error) {
+	var articleContent string
+	contentModel := content.NewContentModal()
+	articleContentEntity, err := contentModel.FindOneCanSetCondition(conditionStruct...)
+	if err == nil {
+		return articleContentEntity.Html_content, nil
+	}
+	return articleContent, err
+}
+
+
+func (self *ContentService) ChangeContent(articleId int, markdownContent, htmlContent string) bool {
 	contentModel := content.NewContentModal()
 	condition := models.NewConditionStruct("article_id", "=", articleId)
 	articleContent, err := contentModel.FindOneCanSetCondition(condition)
 	if err == nil {
-		articleContent.Content = userInput
-		var updateFields = []string{"Content"}
+		articleContent.Content = markdownContent
+		articleContent.Html_content = htmlContent
+		var updateFields = []string{"Content", "Html_content"}
 		_, err = contentModel.Update(articleContent, updateFields, condition)
 	} else {
 		articleContent = &content.ArticlesContent{
-			Content:    userInput,
-			Article_id: articleId,
+			Content:      markdownContent,
+			Html_content: htmlContent,
+			Article_id:   articleId,
 		}
 		_, err = contentModel.Add(articleContent)
 	}

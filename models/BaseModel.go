@@ -45,6 +45,7 @@ func initOperatorsMap() map[string]string {
 	operatorsMap["llike"] = prefix + "endswith"
 	operatorsMap["isnull"] = prefix + "isnull"
 	operatorsMap["rllike"] = prefix + "icontains"
+	operatorsMap["istartswith"] = prefix + "istartswith"
 	return operatorsMap
 }
 

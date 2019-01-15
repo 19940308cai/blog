@@ -1,7 +1,6 @@
 package article
 
 import (
-	"time"
 	"github.com/astaxie/beego/orm"
 	"blog/models"
 	"blog/util"
@@ -10,10 +9,11 @@ import (
 type Article struct {
 	Id          int
 	Title       string
+	Describe    string
 	Category_id int
 	Author_id   int
 	Remove      int
-	Created_at  time.Time `orm:"auto_now_add;type(datetime)"`
+	Created_at  string
 }
 
 func init() {

@@ -8,6 +8,7 @@ type ArticleWarp struct {
 	Id            interface{}
 	Title         interface{}
 	Category_id   interface{}
+	Describe      interface{}
 	Author_id     interface{}
 	Content       interface{}
 	Remove        interface{}
@@ -21,6 +22,7 @@ func (self ArticleWarp) MakeArticle(article article.Article) ArticleWarp {
 	self.Category_id = article.Category_id
 	self.Remove = article.Remove
 	self.Created_at = article.Created_at
+	self.Describe = article.Describe
 	return self
 }
 

@@ -82,6 +82,7 @@
             var search = $("input[name='search']").val()
             window.location.href= "/backend/articles?page=1&size=10&key=title&value="+search
         })
+        
         $('.remove').on('click', function () {
             article_id = $(this).attr("data-value")
             swal({

@@ -52,7 +52,7 @@
         padding: 30px 50px !important;
     }
 </style>
-<div class="fh5co-loader"></div>
+<div class="fh5co-loader" style="display: none;"></div>
 <div id="page">
     <div id="fh5co-aside" style="background-image: url(/static/frontend/images/background-image_gaitubao_com_727x1090.jpg)">
         <div class="overlay"></div>
@@ -73,7 +73,7 @@
     </div>
     <div id="fh5co-main-content">
         <div class="fh5co-post" id="content_warp"></div>
-        <footer style="padding: 10px 0px !important;">
+        <footer  class="foot-warp" style="padding: 1px 0px !important;">
             <a href="javascript:;" class="read-more" style="text-decoration: underline;">
                 点击查看更多
             </a>
@@ -93,30 +93,111 @@
             success: function (json) {
                 if(json.Code == 200){
                     for(var key in json.Data){
-                        var html = "<li data-value='"+json.Data[key]['Id']+"'>"+json.Data[key]['Name']+"</li>"
+                        var html = "<li class='category-seach-btn' data-href='/open/articles?page=1&size=10&key=category_id&value="+json.Data[key]['Id']+"' data-value='"+json.Data[key]['Id']+"'>"+json.Data[key]['Name']+"</li>"
                         $('.category-items').append(html)
                     }
                 }
             }
         });
 
+        $('.category-items').bind('click','.category-seach-btn',function(evt){
+            $.ajax({
+                url: $(evt.target).attr('data-href'),
+                method: "get",
+                success: function (json) {
+                    $("#content_warp").html("")
+                    $('.fh5co-loader').css({"display":"block"})
+                    if(json.Code == 200){
+                        if( json.Data['articles'] == null ){
+                            $('.foot-warp').css({"display":"none"})
+                        }else{
+                            $('.foot-warp').css({"display":"block"})
+                        }
+                        $('.read-more').attr("data-href", json.Data['uriFormatModal'])
+                        for(var key in json.Data['articles']){
+                            var html = '            <div class="fh5co-entry padding">\n' +
+                                    '                <div>\n' +
+                                    '                    <span class="fh5co-post-date">'+json.Data['articles'][key]['Created_at']+'</span>\n' +
+                                    '                    <h2><a href="/frontend/detail?article_id='+json.Data['articles'][key]['Id']+'">'+json.Data['articles'][key]['Title']+'</a></h2>\n' +
+                                    '                    <p>'+json.Data['articles'][key]['Describe']+'</p>\n' +
+                                    '                </div>\n' +
+                                    '            </div>'
+                            $("#content_warp").append(html)
+                        }
+                    }
+                    setTimeout(function(){
+                        $('.fh5co-loader').css({"display":"none"})
+                    },200)
+                }
+            });
+        })
+
+        $('.read-more').on('click', function(){
+            $('.fh5co-loader').css({"display":"block"})
+            if( $(this).attr('data-href') == "no-more" ) {
+                setTimeout(function(){
+                    $('.fh5co-loader').css({"display":"none"})
+                },200)
+                return false
+            }
+            $.ajax({
+                url: $(this).attr('data-href'),
+                method: "get",
+                success: function (json) {
+                    if(json.Code == 200){
+                        if( json.Data['articles'] == null ){
+                            $('.foot-warp').css({"display":"none"})
+                        }else{
+                            $('.foot-warp').css({"display":"block"})
+                        }
+                        $('.read-more').attr("data-href", json.Data['uriFormatModal'])
+                        for(var key in json.Data['articles']){
+                            var html = '            <div class="fh5co-entry padding">\n' +
+                                    '                <div>\n' +
+                                    '                    <span class="fh5co-post-date">'+json.Data['articles'][key]['Created_at']+'</span>\n' +
+                                    '                    <h2><a href="/frontend/detail?article_id='+json.Data['articles'][key]['Id']+'">'+json.Data['articles'][key]['Title']+'</a></h2>\n' +
+                                    '                    <p>'+json.Data['articles'][key]['Describe']+'</p>\n' +
+                                    '                </div>\n' +
+                                    '            </div>'
+                            $("#content_warp").append(html)
+                        }
+                    }
+                    setTimeout(function(){
+                        $('.fh5co-loader').css({"display":"none"})
+                    },200)
+                }
+            });
+            setTimeout(function(){
+                $('.fh5co-loader').css({"display":"none"})
+            },200)
+        })
+
         $.ajax({
             url: "/open/articles",
             method: "get",
             success: function (json) {
+                $('.fh5co-loader').css({"display":"block"})
                 if(json.Code == 200){
+                    if( json.Data['articles'] == null ){
+                        $('.foot-warp').css({"display":"none"})
+                    }else{
+                        $('.foot-warp').css({"display":"block"})
+                    }
                     $('.read-more').attr("data-href", json.Data['uriFormatModal'])
                     for(var key in json.Data['articles']){
                         var html = '            <div class="fh5co-entry padding">\n' +
                                 '                <div>\n' +
                                 '                    <span class="fh5co-post-date">'+json.Data['articles'][key]['Created_at']+'</span>\n' +
-                                '                    <h2><a href="/frontend/detail">'+json.Data['articles'][key]['Title']+'</a></h2>\n' +
-                                '                    <p>'+json.Data['articles'][key]['Content']+'</p>\n' +
+                                '                    <h2><a target="_blank" href="/frontend/detail?article_id='+json.Data['articles'][key]['Id']+'">'+json.Data['articles'][key]['Title']+'</a></h2>\n' +
+                                '                    <p>'+json.Data['articles'][key]['Describe']+'</p>\n' +
                                 '                </div>\n' +
                                 '            </div>'
                         $("#content_warp").append(html)
                     }
                 }
+                setTimeout(function(){
+                    $('.fh5co-loader').css({"display":"none"})
+                },200)
             }
         });
 

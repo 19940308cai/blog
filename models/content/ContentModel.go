@@ -7,10 +7,11 @@ import (
 )
 
 type ArticlesContent struct {
-	Id         int
-	Article_id int
-	Content    string
-	Created_at time.Time `orm:"auto_now_add;type(datetime)"`
+	Id           int
+	Article_id   int
+	Content      string
+	Html_content string
+	Created_at   time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 func init() {

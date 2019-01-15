@@ -1,9 +1,9 @@
 package frontend
 
-type DetailIontroller struct {
+type IndexController struct {
 	BaseControoler
 }
 
-func (self *DetailIontroller) Get() {
-	self.view("详情页面")
+func (self *IndexController) Get() {
+	self.view("蔡江的博客")
 }
