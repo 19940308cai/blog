@@ -21,7 +21,7 @@ func (self ArticleWarp) MakeArticle(article article.Article) ArticleWarp {
 	self.Title = article.Title
 	self.Category_id = article.Category_id
 	self.Remove = article.Remove
-	self.Created_at = article.Created_at
+	self.Created_at = article.Created_at.Format("2006/1/2 15:04:05")
 	self.Describe = article.Describe
 	return self
 }
