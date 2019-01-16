@@ -2,7 +2,6 @@ package util
 
 import (
 	"sort"
-	"fmt"
 )
 
 const _default_left = 4
@@ -80,7 +79,6 @@ func NewPageUtil(count int, pageNo int, pageSize int) PageUtil {
 		//追加当前页
 		nav_num_warp = append(nav_num_warp, pageNo)
 		sort.Ints(nav_num_warp)
-		fmt.Println(nav_num_warp)
 		if len(nav_num_warp) < pageSize {
 			//需要补充的数据
 			var diff_page int = pageSize - len(nav_num_warp)
