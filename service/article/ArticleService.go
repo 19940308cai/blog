@@ -33,6 +33,7 @@ func (self *ArticleService) InitBlog() (int, string) {
 			Remove: 2,
 		}
 		err := articleModel.Add(articleEntity)
+		fmt.Println(err)
 		if err != nil {
 			logs.Debug("初始化博客失败")
 			return 0, ""
